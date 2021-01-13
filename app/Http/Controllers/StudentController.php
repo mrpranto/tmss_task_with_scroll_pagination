@@ -16,21 +16,15 @@ class StudentController extends Controller
         $studentInfo = Student::query()
             ->with('bloodGroup:id,name')
             ->select(['blood_group_id', 'name', 'roll_number', 'phone_number', 'address'])
-//            ->take(1000)
             ->get();
 
-        $studentRender ='<table>
-                           <thead>
-                            <tr>
-                                <th>Sl</th>
-                                <th>Name</th>
-                                <th>Roll No</th>
-                                <th>Phone Number</th>
-                                <th>Address</th>
-                                <th>Blood Group</th>
-                            </tr>
-                            </thead>
-                            <tbody>';
+
+        return $this->renderTable($studentInfo);
+    }
+
+    public function renderTable($studentInfo)
+    {
+        $studentRender ='<table class="studentData"><thead><tr><th>Sl</th><th>Name</th><th>Roll No</th><th>Phone Number</th><th>Address</th><th>Blood Group</th></tr></thead><tbody>';
 
         foreach ($studentInfo as $key => $student)
         {
@@ -44,6 +38,6 @@ class StudentController extends Controller
         $studentRender .='</tbody></table>';
 
         return $studentRender;
-
     }
+
 }
