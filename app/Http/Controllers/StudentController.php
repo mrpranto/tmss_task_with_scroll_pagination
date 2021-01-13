@@ -12,7 +12,7 @@ class StudentController extends Controller
         $studentInfo = Student::query()
             ->with('bloodGroup:id,name')
             ->select(['blood_group_id', 'name', 'roll_number', 'phone_number', 'address'])
-            ->paginate(10000);
+            ->paginate(1000);
 
         if ($request->ajax()) {
             $view = view('data', compact('studentInfo'))->render();
@@ -27,7 +27,7 @@ class StudentController extends Controller
         $studentInfo = Student::query()
             ->with('bloodGroup:id,name')
             ->select(['blood_group_id', 'name', 'roll_number', 'phone_number', 'address'])
-            ->paginate(10000);
+            ->paginate(1000);
 
 
         return $this->renderTable($studentInfo);
