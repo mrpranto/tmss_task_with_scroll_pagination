@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $studentInfo = Student::query()
+            ->with('bloodGroup:id,name')
+            ->select(['blood_group_id', 'name', 'roll_number', 'phone_number', 'address'])
+            ->paginate(10000);
+
+        if ($request->ajax()) {
+            $view = view('data', compact('studentInfo'))->render();
+            return response()->json(['html' => $view]);
+        }
+
         return view('welcome');
     }
 
@@ -16,7 +27,7 @@ class StudentController extends Controller
         $studentInfo = Student::query()
             ->with('bloodGroup:id,name')
             ->select(['blood_group_id', 'name', 'roll_number', 'phone_number', 'address'])
-            ->get();
+            ->paginate(10000);
 
 
         return $this->renderTable($studentInfo);
@@ -28,7 +39,7 @@ class StudentController extends Controller
 
         foreach ($studentInfo as $key => $student)
         {
-            $studentRender .='<tr><td>'.($key+1).'</td>';
+            $studentRender .='<tr><td>'.($studentInfo->firstItem()+$key).'</td>';
             $studentRender .='<td>'.$student->name.'</td>';
             $studentRender .='<td>'.$student->roll_number.'</td>';
             $studentRender .='<td>'.$student->phone_number.'</td>';
@@ -39,5 +50,4 @@ class StudentController extends Controller
 
         return $studentRender;
     }
-
 }

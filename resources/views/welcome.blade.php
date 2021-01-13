@@ -88,12 +88,33 @@
                 $(".loader").remove()
             }
 
-            $("#student_records").append(response)
+            $("#student_records").html(response)
 
         }).fail(function () {
             alert('There is some error.Try after some time.');
         })
     }
+
+    function loadMoreData(page)
+    {
+        $.ajax({
+
+            url:'?page='+ page,
+            type:'get',
+
+        })
+        .done(function (data){
+            $("#student_records").append(data.html)
+        });
+    }
+
+    var page = 1;
+    $(window).scroll(function (){
+        if ($(window).scrollTop() + $(window).height() >= $(document).height()){
+            page++
+            loadMoreData(page);
+        }
+    })
 
 
 </script>
